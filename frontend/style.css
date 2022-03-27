@@ -3,3 +3,21 @@
   margin: 0;
   padding: 0;
 }
+
+.title {
+  margin-top: 2em;
+  text-align: center;
+}
+
+.login {
+  margin: 4em 25%;
+  display: flex;
+  gap: 5em;
+}
+
+.login-info {
+  margin-top: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
