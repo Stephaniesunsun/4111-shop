@@ -98,7 +98,7 @@ def teardown_request(exception):
 # see for routing: http://flask.pocoo.org/docs/0.10/quickstart/#routing
 # see for decorators: http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
 #
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     """
     request is a special object that Flask provides to access web request information:
@@ -112,6 +112,8 @@ def index():
 
     # DEBUG: this is debugging code to see what request looks like
     print(request.args)
+    if request.method == 'POST':
+        print(request)
 
     #
     # example of a database query
@@ -166,12 +168,18 @@ def index():
 #
 
 
-@app.route('/another')
-def another():
-    return render_template("another.html")
+@app.route('/customer')
+def customer():
+    return render_template("customer.html")
 
+
+@app.route('/employee')
+def employee():
+    return render_template("employee.html")
 
 # Example of adding new data to the database
+
+
 @app.route('/add', methods=['POST'])
 def add():
     name = request.form['name']

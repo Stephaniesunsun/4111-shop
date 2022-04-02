@@ -8,10 +8,13 @@
     <div class='login'>
       <div class="cus-login">
         <h1 class="customer">Customer Login</h1>
+        
         <div class="login-info">
-          EMAIL ADDRESS:<input type="text" class="email"> 
-          PASSWORD:<input type="text" class="password">
-          <form action="/frontend/customer.html">
+          <form action="http://localhost:8111/" method="POST">
+            EMAIL ADDRESS:
+            <input type="text" class="email" name='email_cu' required> 
+            PASSWORD:
+            <input type="text" class="password" name='password_cu' required>
             <input class='login' type="submit" />
         </form>
         </div>
@@ -19,9 +22,11 @@
       <div class="emp-login">
         <h1 class="employee">Employee Login</h1>
         <div class="login-info">
-          EMPLOYEE ID:<input type="text" class="email"> 
-          NAME:<input type="text" class="password">
-          <form action="/frontend/employee.html">
+          <form action="http://localhost:8111/" method="POST">
+            EMPLOYEE ID:
+            <input type="text" class="email" name='email_em' required> 
+            NAME:
+            <input type="text" class="password" name='password_em' required>
             <input class='login' type="submit" />
         </form>
         </div>
@@ -30,3 +35,4 @@
     <script src='index.js'></script>
   </body>
 </html>
+
