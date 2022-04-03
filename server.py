@@ -14,10 +14,11 @@ A debugger such as "pdb" may be helpful for debugging.
 Read about it online.
 """
 
+import mimetypes
 import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
-from flask import Flask, request, render_template, g, redirect, Response
+from flask import Flask, request, render_template, g, redirect, Response, json
 
 tmpl_dir = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), 'templates')
@@ -106,16 +107,22 @@ def index():
     request.method:   "GET" or "POST"
     request.form:     if the browser submitted a form, this contains the data in the form
     request.args:     dictionary of URL arguments, e.g., {a:1, b:2} for http://localhost?a=1&b=2
-
+comm
     See its API: http://flask.pocoo.org/docs/0.10/api/#incoming-request-data
     """
 
     # DEBUG: this is debugging code to see what request looks like
     print(request.args)
-    if request.method == 'POST':
-        print(request)
+    username = ''
+    password = ''
 
-    #
+    if request.method == 'POST':
+        username = request.form['email_cu']
+        password = request.form['password_cu']
+
+    print(username, password)
+
+#
     # example of a database query
     #
     cursor = g.conn.execute("SELECT name FROM test")
@@ -168,9 +175,16 @@ def index():
 #
 
 
-@app.route('/customer')
+@app.route('/customer', methods=['GET'])  # fetch all products
 def customer():
-    return render_template("customer.html")
+    cursor = g.conn.execute("SELECT * FROM product")
+    products = []
+
+    for result in cursor:
+        row_as_dict = dict(result)
+        products.append(row_as_dict)
+    cursor.close()
+    return render_template("customer.html", products=products)
 
 
 @app.route('/employee')

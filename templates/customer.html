@@ -4,11 +4,25 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='customer.css')}}">
     <title>Document</title>
 </head>
 <body>
     <div>
-        Customer page - show all the products 
+        <h1>WELCOME!</h1>
+        <div class='products'>
+        {% for product in products %}
+        <div class='product'>
+            <h3>{{product['product_name']}}</h3>
+            <p>price:{{product['price']}}</p>
+            <p>brand:{{product['brand']}}</p>
+            <p>stock:{{product['stock_num']}}</p>
+            <p>size:{{product['cloth_size']}}</p>
+        </div>
+        {% endfor %}
+        </div>
+        
     </div>
+
 </body>
 </html>
