@@ -4,11 +4,70 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='employee.css')}}">
     <title>Document</title>
 </head>
 <body>
     <div>
-        Employee page - modify database
+        <h1>Employee page - modify database</h1>
+        <div class='container'>
+            <div class="add">
+                <p>ADD PRODUCT TO DATABASE</p>
+                <form action="http://localhost:8111/add" method="POST">
+                    Product ID:
+                    <input type="text" name='add_id' required>
+                    Product name:
+                    <input type="text" name='add_name' required>
+                    Product price:
+                    <input type="text" name='add_price' required>
+                    Product brand:
+                    <input type="text" name='add_brand'>
+                    Product stock ID:
+                    <input type="text" name='add_stockid' required>
+                    Product stock:
+                    <input type="text" name='add_stock' required>
+                    Product size:
+                    <input type="text" name='add_size'>
+                    <input type="submit">
+                </form>
+            </div>
+            <div class="delete">
+                <p>DELETE PRODUCT FROM DATABASE</p>
+                <form action="http://localhost:8111/delete" method="POST">
+                    Product name:
+                    <input type="text" name='delete_name' required>
+                    Product id:
+                    <input type="text" name='delete_id'>
+                    <input type="submit">
+                </form>
+            </div>
+            <div class="update">
+                <p>UPDATE PRODUCT INFORMATION</p>
+                <form action="http://localhost:8111/update" method="POST">
+                    <label for="options"></label>
+                    Product id that you want to update:
+                    <input type="text" name='update_id' required>
+                    <select name="options" id="options">
+                        <option value="product_name">name</option>
+                        <option value="price">price</option>
+                        <option value="brand">brand</option>
+                        <option value="stock_num">stock number</option>
+                        <option value="stock_id">stock id</option>
+                        <option value="cloth_size">size</option>
+                    </select>
+                    <input type="text" name='update_field' required>
+                    <input type="submit" value='Update record'>
+                </form>
+            </div>
+            <div class='customer-info'>
+                <p>CHECK CUSTOMER'S ORDER</p>
+                Customer's id:
+                <input type="text" name='customer_id' required>
+                Purchase id:
+                <input type="text" name='purchase_id'>
+                <input type="submit">
+            </div>
+        </div>
     </div>
 </body>
 </html>

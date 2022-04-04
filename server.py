@@ -16,6 +16,7 @@ Read about it online.
 
 import mimetypes
 import os
+from re import M
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response, json
@@ -125,54 +126,20 @@ comm
 #
     # example of a database query
     #
-    cursor = g.conn.execute("SELECT name FROM test")
-    names = []
-    for result in cursor:
-        names.append(result['name'])  # can also be accessed using result[0]
-    cursor.close()
+    #cursor = g.conn.execute("SELECT name FROM test")
+    #names = []
+    # for result in cursor:
+    #   names.append(result['name'])  # can also be accessed using result[0]
+    # cursor.close()
 
     #
-    # Flask uses Jinja templates, which is an extension to HTML where you can
-    # pass data to a template and dynamically generate HTML based on the data
-    # (you can think of it as simple PHP)
-    # documentation: https://realpython.com/blog/python/primer-on-jinja-templating/
-    #
-    # You can see an example template in templates/index.html
-    #
-    # context are the variables that are passed to the template.
-    # for example, "data" key in the context variable defined below will be
-    # accessible as a variable in index.html:
-    #
-    #     # will print: [u'grace hopper', u'alan turing', u'ada lovelace']
-    #     <div>{{data}}</div>
-    #
-    #     # creates a <div> tag for each element in data
-    #     # will print:
-    #     #
-    #     #   <div>grace hopper</div>
-    #     #   <div>alan turing</div>
-    #     #   <div>ada lovelace</div>
-    #     #
-    #     {% for n in data %}
-    #     <div>{{n}}</div>
-    #     {% endfor %}
-    #
-    context = dict(data=names)
+    #context = dict(data=names)
 
     #
     # render_template looks in the templates/ folder for files.
     # for example, the below file reads template/index.html
     #
-    return render_template("index.html", **context)
-
-#
-# This is an example of a different path.  You can see it at:
-#
-#     localhost:8111/another
-#
-# Notice that the function name is another() rather than index()
-# The functions for each app.route need to have different names
-#
+    return render_template("index.html"), 200
 
 
 @app.route('/customer', methods=['GET'])  # fetch all products
@@ -187,8 +154,23 @@ def customer():
     return render_template("customer.html", products=products)
 
 
-@app.route('/employee')
+@app.route('/product/<id>', methods=['GET'])  # fetch all products
+def product(id=0):
+    print('haha', id)
+    sql = text("SELECT * FROM product WHERE product_id=:pid")
+
+    cursor = g.conn.execute(sql, pid=id)
+    row = cursor.fetchone()
+    print(row)
+
+    return render_template("product.html")
+
+
+@app.route('/employee', methods=['GET', 'POST'])
 def employee():
+    args = request.args
+    print(args)
+
     return render_template("employee.html")
 
 # Example of adding new data to the database
@@ -196,9 +178,72 @@ def employee():
 
 @app.route('/add', methods=['POST'])
 def add():
-    name = request.form['name']
-    g.conn.execute('INSERT INTO test VALUES (NULL, ?)', name)
-    return redirect('/')
+    id = request.form['add_id']
+    name = request.form['add_name']
+    price = request.form['add_price']
+    brand = request.form['add_brand']
+    stock = request.form['add_stock']
+    stockid = request.form['add_stockid']
+    size = request.form['add_size']
+
+    sql = text('INSERT INTO product(product_id,product_name,price,stock_id,stock_num,cloth_size,brand) VALUES (:pid,:pname,:pprice,:pstockid,:pstock,:psize,:pbrand)')
+    g.conn.execute(sql, pid=id, pname=name, pprice=price,
+                   pbrand=brand, pstock=stock, pstockid=stockid, psize=size)
+    return redirect('/employee')
+
+
+@app.route('/delete', methods=['POST'])
+def delete():
+    id = request.form['delete_id']
+    name = request.form['delete_name']
+
+    sql = text('DELETE FROM product WHERE product_id=:pid')
+    cursor = g.conn.execute(sql, pid=id)
+    return redirect('/employee')
+
+
+@app.route('/update', methods=['POST'])
+def update():
+    id = request.form['update_id']
+    field = request.form['options']
+    value = request.form['update_field']
+
+    if field == 'product_name':
+        sql = text(
+            'UPDATE product SET product_name=:pvalue WHERE product_id=:pid')
+        cursor = g.conn.execute(sql, pid=id, pvalue=value)
+        return redirect('/employee')
+    elif field == 'price':
+        sql = text('UPDATE product SET price=:pvalue WHERE product_id=:pid')
+        cursor = g.conn.execute(sql, pid=id, pvalue=value)
+        return redirect('/employee')
+    elif field == 'brand':
+        sql = text('UPDATE product SET brand=:pvalue WHERE product_id=:pid')
+        cursor = g.conn.execute(sql, pid=id, pvalue=value)
+        return redirect('/employee')
+    elif field == 'stock_num':
+        sql = text('UPDATE product SET stock_num=:pvalue WHERE product_id=:pid')
+        cursor = g.conn.execute(sql, pid=id, pvalue=value)
+        return redirect('/employee')
+    elif field == 'stock_id':
+        sql = text('UPDATE product SET stock_id=:pvalue WHERE product_id=:pid')
+        cursor = g.conn.execute(sql, pid=id, pvalue=value)
+        return redirect('/employee')
+    elif field == 'cloth_size':
+        sql = text('UPDATE product SET cloth_size=:pvalue WHERE product_id=:pid')
+        cursor = g.conn.execute(sql, pid=id, pvalue=value)
+        return redirect('/employee')
+
+
+@app.route('/readcustomer', methods=['POST'])
+def readcustomer():
+    id = request.form['update_id']
+    field = request.form['options']
+    value = request.form['update_field']
+
+    sql = text('UPDATE product SET :pfield=:pvalue WHERE product_id=:pid')
+    cursor = g.conn.execute(sql, pid=id, pfield=field, pvalue=value)
+    return redirect('/employee', customer=customer)
 
 
 @app.route('/login')

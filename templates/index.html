@@ -3,7 +3,7 @@
     <link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='style.css')}}">
   </head>
 
-  <body>
+  <body id='index'>
     <h1 class='title'>4111 SHOP</h1>
     <div class='login'>
       <div class="cus-login">
@@ -14,8 +14,8 @@
             EMAIL ADDRESS:
             <input type="text" class="email" name='email_cu' required> 
             PASSWORD:
-            <input type="text" class="password" name='password_cu' required>
-            <input class='login' type="submit" />
+            <input type="text" class="password1" name='password_cu' required>
+            <input class='login' type="submit" onclick="validate_customer()"/>
         </form>
         </div>
       </div>
@@ -24,15 +24,17 @@
         <div class="login-info">
           <form action="http://localhost:8111/" method="POST">
             EMPLOYEE ID:
-            <input type="text" class="email" name='email_em' required> 
+            <input type="text" class="emp_name" name='email_em' required> 
             NAME:
-            <input type="text" class="password" name='password_em' required>
-            <input class='login' type="submit" />
+            <input type="text" class="password2" name='password_em' required>
+            <input class='login' type="submit" onclick="validate_employee()"/>
         </form>
         </div>
       </div>
     </div>
-    <script src='index.js'></script>
+    {% block javascript %}
+    <script src="{{ url_for('static',filename='index.js') }}"></script>
+{% endblock %}
   </body>
 </html>
 
