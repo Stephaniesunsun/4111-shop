@@ -1,29 +1,38 @@
-<html>
-  <head>
-    <link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='style.css')}}">
-  </head>
-
-  <body id='index'>
-    <h1 class='title'>4111 SHOP</h1>
-    <div class='login'>
-      <div class="cus-login">
-        <h1 class="customer">Customer Login</h1>
-        
-        <div class="login-info">
-          <form action="/" method="POST">
-            EMAIL ADDRESS:
-            <input type="text" class="email" name='email_cu' required> 
-            PASSWORD:
-            <input type="text" class="password1" name='password_cu' required>
-            <input class='login' type="submit"/>
-        </form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='customer.css')}}">
+    <title>Document</title>
+</head>
+<body id='index'>
+    <div>
+        <h1>WELCOME to 4111 SHOP!</h1>
+        <div class='option'>
+            <a href='/login_customer'>Customer Check Out</a>
+            <a href=/login_employee>You're an employee? Click here to login</a>
         </div>
-          <a href=/login_employee>You're an employee? Click here to login</a>
-      </div>
+        <div class='products'>
+        {% for product in products %}
+        <div class='product'>
+            <h3>{{product['product_name']}}</h3>
+            <p>price:{{product['price']}}</p>
+            <p>brand:{{product['brand']}}</p>
+            <p>stock:{{product['stock_num']}}</p>
+            <p>size:{{product['cloth_size']}}</p>
+            <div class='button-container'>
+                <button class='add-shopping'>Add to your shopping cart</button>
+                <button class='delete-shopping'>Delete this item from your shopping cart</button>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
     </div>
     {% block javascript %}
     <script src="{{ url_for('static',filename='index.js') }}"></script>
-{% endblock %}
-  </body>
-</html>
+    {% endblock %}
+</body>
 
+</html>

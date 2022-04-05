@@ -6,9 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<body id='product'>
-    <div class='detailed'></div>
-    hi here's the checkout page 
+<body id='checkout'>
+    <div class='detail'>
+    checkout page
+    {% for customer in customers %}
+        <h3>Hi, {{customer['name']}}!</h3>
+        <h3>Your shipping information: {{customer.contact_info}}</h3>
+    {% endfor %}
+    {% for info in shipping %}
+    <p>{{info['address_name']}}</p>
+    {% endfor %}
+    </div>
+    <button class='confirm'>click here to confirm order</button>
+    <div class='payment'>
+        <form class='pay' action="/checkout" method="GET">
+            Item:
+            <input type="text" id='set-item'/>
+            Payment method:
+            <select name="pay_method" id="">
+                <option value="debit">Debit Card</option>
+                <option value="credit">Credit Card</option>
+                <option value="transfer">Bank Transfer</option>
+                <option value="paypal">Pay Pal</option>
+            </select>
+            <input id='paynow' type="submit" value='Pay Now'/>
+        </form>
+    </div>
     {% block javascript %}
     <script src="{{ url_for('static',filename='index.js') }}"></script>
 {% endblock %}

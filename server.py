@@ -14,6 +14,7 @@ A debugger such as "pdb" may be helpful for debugging.
 Read about it online.
 """
 
+from curses import flash
 import mimetypes
 import os
 from re import M
@@ -38,23 +39,7 @@ app = Flask(__name__, template_folder=tmpl_dir)
 #     DATABASEURI = "postgresql://biliris:foobar@104.196.152.219/proj1part2"
 #
 DATABASEURI = "postgresql://ws2614:7391@35.211.155.104/proj1part2"
-
-
-#
-# This line creates a database engine that knows how to connect to the URI above.
-#
 engine = create_engine(DATABASEURI)
-
-#
-# Example of running queries in your database
-# Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
-#
-engine.execute("""CREATE TABLE IF NOT EXISTS test (
-  id serial,
-  name text
-);""")
-engine.execute(
-    """INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
 
 
 @app.before_request
@@ -87,14 +72,34 @@ def teardown_request(exception):
         pass
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])  # fetch all products
 def index():
+    cursor = g.conn.execute("SELECT * FROM product")
+    products = []
+
+    for result in cursor:
+        row_as_dict = dict(result)
+        products.append(row_as_dict)
+    cursor.close()
+    return render_template("index.html", products=products)
+
+
+@app.route('/login_customer', methods=['GET'])
+def cus_switch():
+    args = request.args
+    print(args)
+
+    return render_template("customer.html")
+
+
+@app.route('/customer', methods=['POST'])
+def customer():
     if request.method == 'POST':
         username = request.form['email_cu']
         password = request.form['password_cu']
         customer = []
         sql = text(
-            "SELECT customer_id FROM customer WHERE contact_info=:cname AND password=:pwd")
+            "SELECT * FROM customer WHERE contact_info=:cname AND password=:pwd")
         cursor = g.conn.execute(sql, cname=username, pwd=password)
         for result in cursor:
             row_as_dict = dict(result)
@@ -102,9 +107,27 @@ def index():
         cursor.close()
 
         if not customer:
+            print('not found')
             return redirect('/')
-        return redirect("/customer")
-    return render_template("index.html")
+        else:
+            sql2 = text("SELECT address_name FROM customer_address JOIN customer ON customer_address.customer_id=customer.customer_id WHERE customer.contact_info=:cname AND customer.password=:cpwd")
+            shipping = []
+            cursor = g.conn.execute(sql2, cname=username, cpwd=password)
+            for result in cursor:
+                row_as_dict = dict(result)
+                shipping.append(row_as_dict)
+            print(shipping)
+            cursor.close()
+
+            return render_template("checkout.html", customers=customer, shipping=shipping)
+
+
+@app.route('/checkout', methods=['GET', 'POST'])
+def checkout():
+    if request.method == 'POST':
+        print(request.form)
+
+    return render_template("checkout.html")
 
 
 @app.route('/login_employee', methods=['GET'])
@@ -132,18 +155,6 @@ def emp_login():
     if not employee:
         return redirect('login_employee')
     return render_template("employee.html")
-
-
-@app.route('/customer', methods=['GET'])  # fetch all products
-def customer():
-    cursor = g.conn.execute("SELECT * FROM product")
-    products = []
-
-    for result in cursor:
-        row_as_dict = dict(result)
-        products.append(row_as_dict)
-    cursor.close()
-    return render_template("customer.html", products=products)
 
 
 @app.route('/employee', methods=['GET', 'POST'])

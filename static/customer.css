@@ -2,7 +2,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  color: black;
   width: 100%;
 }
 h1 {
@@ -14,6 +13,15 @@ h3 {
   margin-bottom: 0.5em;
 }
 
+.button-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.option {
+  display: flex;
+  justify-content: space-between;
+}
 .products {
   width: 100%;
   display: grid;
