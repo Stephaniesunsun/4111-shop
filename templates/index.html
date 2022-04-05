@@ -10,26 +10,15 @@
         <h1 class="customer">Customer Login</h1>
         
         <div class="login-info">
-          <form action="http://localhost:8111/" method="POST">
+          <form action="/" method="POST">
             EMAIL ADDRESS:
             <input type="text" class="email" name='email_cu' required> 
             PASSWORD:
             <input type="text" class="password1" name='password_cu' required>
-            <input class='login' type="submit" onclick="validate_customer()"/>
+            <input class='login' type="submit"/>
         </form>
         </div>
-      </div>
-      <div class="emp-login">
-        <h1 class="employee">Employee Login</h1>
-        <div class="login-info">
-          <form action="http://localhost:8111/" method="POST">
-            EMPLOYEE ID:
-            <input type="text" class="emp_name" name='email_em' required> 
-            NAME:
-            <input type="text" class="password2" name='password_em' required>
-            <input class='login' type="submit" onclick="validate_employee()"/>
-        </form>
-        </div>
+          <a href=/login_employee>You're an employee? Click here to login</a>
       </div>
     </div>
     {% block javascript %}

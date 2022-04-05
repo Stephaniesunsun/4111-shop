@@ -62,10 +62,13 @@
             <div class='customer-info'>
                 <p>CHECK CUSTOMER'S ORDER</p>
                 Customer's id:
-                <input type="text" name='customer_id' required>
-                Purchase id:
-                <input type="text" name='purchase_id'>
-                <input type="submit">
+                <form action="http://localhost:8111/readcustomer" method="POST">
+                    <input type="text" name='customer_id' required>
+                    <input type="submit">
+                </form>
+            </div>
+            <div class='order_info'>
+                {{orders}}
             </div>
         </div>
     </div>

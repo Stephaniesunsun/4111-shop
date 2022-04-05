@@ -87,59 +87,51 @@ def teardown_request(exception):
         pass
 
 
-#
-# @app.route is a decorator around index() that means:
-#   run index() whenever the user tries to access the "/" path using a GET request
-#
-# If you wanted the user to go to, for example, localhost:8111/foobar/ with POST or GET then you could use:
-#
-#       @app.route("/foobar/", methods=["POST", "GET"])
-#
-# PROTIP: (the trailing / in the path is important)
-#
-# see for routing: http://flask.pocoo.org/docs/0.10/quickstart/#routing
-# see for decorators: http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
-#
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    """
-    request is a special object that Flask provides to access web request information:
-
-    request.method:   "GET" or "POST"
-    request.form:     if the browser submitted a form, this contains the data in the form
-    request.args:     dictionary of URL arguments, e.g., {a:1, b:2} for http://localhost?a=1&b=2
-comm
-    See its API: http://flask.pocoo.org/docs/0.10/api/#incoming-request-data
-    """
-
-    # DEBUG: this is debugging code to see what request looks like
-    print(request.args)
-    username = ''
-    password = ''
-
     if request.method == 'POST':
         username = request.form['email_cu']
         password = request.form['password_cu']
+        customer = []
+        sql = text(
+            "SELECT customer_id FROM customer WHERE contact_info=:cname AND password=:pwd")
+        cursor = g.conn.execute(sql, cname=username, pwd=password)
+        for result in cursor:
+            row_as_dict = dict(result)
+            customer.append(row_as_dict)
+        cursor.close()
 
-    print(username, password)
+        if not customer:
+            return redirect('/')
+        return redirect("/customer")
+    return render_template("index.html")
 
-#
-    # example of a database query
-    #
-    #cursor = g.conn.execute("SELECT name FROM test")
-    #names = []
-    # for result in cursor:
-    #   names.append(result['name'])  # can also be accessed using result[0]
-    # cursor.close()
 
-    #
-    #context = dict(data=names)
+@app.route('/login_employee', methods=['GET'])
+def emp_switch():
+    args = request.args
+    print(args)
 
-    #
-    # render_template looks in the templates/ folder for files.
-    # for example, the below file reads template/index.html
-    #
-    return render_template("index.html"), 200
+    return render_template("login_employee.html")
+
+
+@app.route('/emp-login', methods=['POST'])  # fetch all products
+def emp_login():
+    id = request.form['emp_id']
+    name = request.form['emp_name']
+    age = request.form['emp_age']
+    employee = []
+    sql = text(
+        "SELECT employee_id FROM employee WHERE employee_id=:eid AND name=:ename AND age=:eage")
+    cursor = g.conn.execute(sql, eid=id, ename=name, eage=age)
+    for result in cursor:
+        row_as_dict = dict(result)
+        employee.append(row_as_dict)
+    cursor.close()
+
+    if not employee:
+        return redirect('login_employee')
+    return render_template("employee.html")
 
 
 @app.route('/customer', methods=['GET'])  # fetch all products
@@ -152,18 +144,6 @@ def customer():
         products.append(row_as_dict)
     cursor.close()
     return render_template("customer.html", products=products)
-
-
-@app.route('/product/<id>', methods=['GET'])  # fetch all products
-def product(id=0):
-    print('haha', id)
-    sql = text("SELECT * FROM product WHERE product_id=:pid")
-
-    cursor = g.conn.execute(sql, pid=id)
-    row = cursor.fetchone()
-    print(row)
-
-    return render_template("product.html")
 
 
 @app.route('/employee', methods=['GET', 'POST'])
@@ -199,6 +179,7 @@ def delete():
 
     sql = text('DELETE FROM product WHERE product_id=:pid')
     cursor = g.conn.execute(sql, pid=id)
+    cursor.close()
     return redirect('/employee')
 
 
@@ -211,39 +192,40 @@ def update():
     if field == 'product_name':
         sql = text(
             'UPDATE product SET product_name=:pvalue WHERE product_id=:pid')
-        cursor = g.conn.execute(sql, pid=id, pvalue=value)
-        return redirect('/employee')
+
     elif field == 'price':
         sql = text('UPDATE product SET price=:pvalue WHERE product_id=:pid')
-        cursor = g.conn.execute(sql, pid=id, pvalue=value)
-        return redirect('/employee')
+
     elif field == 'brand':
         sql = text('UPDATE product SET brand=:pvalue WHERE product_id=:pid')
-        cursor = g.conn.execute(sql, pid=id, pvalue=value)
-        return redirect('/employee')
+
     elif field == 'stock_num':
         sql = text('UPDATE product SET stock_num=:pvalue WHERE product_id=:pid')
-        cursor = g.conn.execute(sql, pid=id, pvalue=value)
-        return redirect('/employee')
+
     elif field == 'stock_id':
         sql = text('UPDATE product SET stock_id=:pvalue WHERE product_id=:pid')
-        cursor = g.conn.execute(sql, pid=id, pvalue=value)
-        return redirect('/employee')
+
     elif field == 'cloth_size':
         sql = text('UPDATE product SET cloth_size=:pvalue WHERE product_id=:pid')
-        cursor = g.conn.execute(sql, pid=id, pvalue=value)
-        return redirect('/employee')
+
+    cursor = g.conn.execute(sql, pid=id, pvalue=value)
+    cursor.close()
+    return redirect('/employee')
 
 
 @app.route('/readcustomer', methods=['POST'])
 def readcustomer():
-    id = request.form['update_id']
-    field = request.form['options']
-    value = request.form['update_field']
+    id = request.form['customer_id']
+    orders = []
+    sql = text('SELECT name,contact_info,order_id FROM customer JOIN purchase ON customer.customer_id=purchase.customer_id WHERE customer.customer_id=:cid')
+    cursor = g.conn.execute(sql, cid=id)
 
-    sql = text('UPDATE product SET :pfield=:pvalue WHERE product_id=:pid')
-    cursor = g.conn.execute(sql, pid=id, pfield=field, pvalue=value)
-    return redirect('/employee', customer=customer)
+    for result in cursor:
+        row_as_dict = dict(result)
+        orders.append(row_as_dict)
+    cursor.close()
+
+    return render_template('employee.html', orders=orders)
 
 
 @app.route('/login')
