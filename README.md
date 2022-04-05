@@ -1,4 +1,5 @@
 Wei Sun - COLUMBIA UNIVERSITY
+
 Wenxi Chen - COLUMBIA UNIVERSITY
 
 Course Name - Introduction to Databases
