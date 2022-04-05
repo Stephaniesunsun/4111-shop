@@ -14,7 +14,6 @@ A debugger such as "pdb" may be helpful for debugging.
 Read about it online.
 """
 
-from curses import flash
 import mimetypes
 import os
 from re import M

@@ -13,7 +13,7 @@
         <div class='container'>
             <div class="add">
                 <p>ADD PRODUCT TO DATABASE</p>
-                <form action="http://localhost:8111/add" method="POST">
+                <form action="/add" method="POST">
                     Product ID:
                     <input type="text" name='add_id' required>
                     Product name:
@@ -33,7 +33,7 @@
             </div>
             <div class="delete">
                 <p>DELETE PRODUCT FROM DATABASE</p>
-                <form action="http://localhost:8111/delete" method="POST">
+                <form action="/delete" method="POST">
                     Product name:
                     <input type="text" name='delete_name' required>
                     Product id:
@@ -43,7 +43,7 @@
             </div>
             <div class="update">
                 <p>UPDATE PRODUCT INFORMATION</p>
-                <form action="http://localhost:8111/update" method="POST">
+                <form action="/update" method="POST">
                     <label for="options"></label>
                     Product id that you want to update:
                     <input type="text" name='update_id' required>
@@ -62,7 +62,7 @@
             <div class='customer-info'>
                 <p>CHECK CUSTOMER'S ORDER</p>
                 Customer's id:
-                <form action="http://localhost:8111/readcustomer" method="POST">
+                <form action="/readcustomer" method="POST">
                     <input type="text" name='customer_id' required>
                     <input type="submit">
                 </form>
