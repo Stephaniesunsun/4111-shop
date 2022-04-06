@@ -17,9 +17,8 @@
     <p>{{info['address_name']}}</p>
     {% endfor %}
     </div>
-    <button class='confirm'>click here to confirm order</button>
     <div class='payment'>
-        <form class='pay' action="/checkout" method="GET">
+        <form id='payment-form' action="/checkout" method="GET">
             Item:
             <input type="text" id='set-item'/>
             Payment method:

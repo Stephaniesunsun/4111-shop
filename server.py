@@ -80,6 +80,7 @@ def index():
         row_as_dict = dict(result)
         products.append(row_as_dict)
     cursor.close()
+
     return render_template("index.html", products=products)
 
 
@@ -95,11 +96,11 @@ def cus_switch():
 def customer():
     if request.method == 'POST':
         username = request.form['email_cu']
-        password = request.form['password_cu']
+        password1 = request.form['password_cu']
         customer = []
         sql = text(
             "SELECT * FROM customer WHERE contact_info=:cname AND password=:pwd")
-        cursor = g.conn.execute(sql, cname=username, pwd=password)
+        cursor = g.conn.execute(sql, cname=username, pwd=password1)
         for result in cursor:
             row_as_dict = dict(result)
             customer.append(row_as_dict)
@@ -111,7 +112,7 @@ def customer():
         else:
             sql2 = text("SELECT address_name FROM customer_address JOIN customer ON customer_address.customer_id=customer.customer_id WHERE customer.contact_info=:cname AND customer.password=:cpwd")
             shipping = []
-            cursor = g.conn.execute(sql2, cname=username, cpwd=password)
+            cursor = g.conn.execute(sql2, cname=username, cpwd=password1)
             for result in cursor:
                 row_as_dict = dict(result)
                 shipping.append(row_as_dict)
@@ -126,7 +127,7 @@ def checkout():
     if request.method == 'POST':
         print(request.form)
 
-    return render_template("checkout.html")
+    return "Thanks for your support!"
 
 
 @app.route('/login_employee', methods=['GET'])
