@@ -19,7 +19,7 @@ import mimetypes
 import os
 from re import M
 from unicodedata import name
-from numpy import size
+
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response, json
