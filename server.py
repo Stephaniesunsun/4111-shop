@@ -14,9 +14,12 @@ A debugger such as "pdb" may be helpful for debugging.
 Read about it online.
 """
 
+
 import mimetypes
 import os
 from re import M
+from unicodedata import name
+from numpy import size
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response, json
@@ -91,7 +94,6 @@ def cus_switch():
 
     return render_template("customer.html")
 
-
 @app.route('/customer', methods=['POST'])
 def customer():
     if request.method == 'POST':
@@ -128,6 +130,34 @@ def checkout():
         print(request.form)
 
     return "Thanks for your support!"
+
+@app.route('/signup', methods=['POST','GET'])
+def cus_signup_jump():
+    args = request.args
+    print(args)
+    
+    return render_template("signup_customer.html")
+
+@app.route('/signup_customer', methods=['POST','GET'])
+def cus_signup():
+    if request.method=='POST':
+        email=request.form['cus_email']
+        name=request.form['cus_name']
+        size=request.form['cus_size']
+        password=request.form['cus_pw']
+        password2=request.form['cus_pw2']
+        if password==password2:
+            sql=text(
+                "INSERT INTO customer(name,size,contact_info,password) VALUES \
+                    (:textname,:textsize,:textemail,:textpassword)"
+            )
+            g.conn.execute(sql, textname=name,textsize=size,textemail=email,textpassword=password)
+            print('sucessfully inserted new customer')
+            return redirect('/login_customer')
+        else:
+            print('two passwords are not same')
+        
+    #return render_template("signup_customer.html")
 
 
 @app.route('/login_employee', methods=['GET'])
