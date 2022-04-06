@@ -9,11 +9,39 @@
 </head>
 <body id='index'>
     <div>
-        <h1>WELCOME to 4111 SHOP!</h1>
+        <h1>WELCOME TO 4111 SHOP!</h1>
+        <div class='Query—product'>
+            <p>SEARCH for product</p>
+            PRODUCT's id:
+            <form class='form' action="/query_product" method="POST">
+                Product size:
+                <input type="text" name='query_size'>
+                Product name:
+                <input type="text" name='query_name'>
+                Product brand:
+                <input type="text" name='query_brand'>
+                <input class='submit' type="submit"/>
+            </form>
+        </div>
         <div class='option'>
             <a href='/login_customer'>Customer Check Out</a>
             <a href=/login_employee>You're an employee? Click here to login</a>
             <a href=/signup>New User Sign Up Here</a>
+        </div>
+        <div class='query_product_info'>
+        {% for product in query_product_info %}
+        <div class='product'>
+            <h3>{{product['product_name']}}</h3>
+            <p>price:{{product['price']}}</p>
+            <p>brand:{{product['brand']}}</p>
+            <p>stock:{{product['stock_num']}}</p>
+            <p>size:{{product['cloth_size']}}</p>
+            <div class='button-container'>
+                <button class='add-shopping'>Add to shopping cart</button>
+                <button class='delete-shopping'>Clear shopping cart</button>
+            </div>
+        </div>
+        {% endfor %}
         </div>
         <div class='products'>
         {% for product in products %}

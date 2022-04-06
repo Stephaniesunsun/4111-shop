@@ -19,6 +19,7 @@ import mimetypes
 import os
 from re import M
 from unicodedata import name
+from numpy import size
 
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
@@ -86,6 +87,32 @@ def index():
 
     return render_template("index.html", products=products)
 
+@app.route('/query_product', methods=['GET', 'POST'])
+def query_product():
+    cursor = g.conn.execute("SELECT product_id,product_name,brand,price,cloth_size,stock_num FROM product")
+    products = []
+    qsize = request.form['query_size']
+    qname = request.form['query_name']
+    qbrand=request.form['query_brand']
+    if not qsize and not qname and not qbrand:
+        return redirect('/')
+    for result in cursor:
+        row= dict(result)
+
+        print(row)
+        if row['cloth_size'] and qsize:
+            if qsize == row['cloth_size'].strip():
+                products.append(row)
+                continue
+        if row['brand'] and qbrand:
+            if qbrand in row['brand']:
+                products.append(row)
+                continue
+        if qname:
+            if qname in row['product_name']:
+                products.append(row)
+                continue
+    return render_template('index.html',query_product_info=products)
 
 @app.route('/login_customer', methods=['GET'])
 def cus_switch():
