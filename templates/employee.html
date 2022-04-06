@@ -71,6 +71,17 @@
             <div class='order_info'>
                 {{orders}}
             </div>
+            <div class='supply-info'>
+                <p>CHECK PRODUCT'S SUPPlIER</p>
+                PRODUCT's id:
+                <form class='form' action="/readsupply" method="POST">
+                    <input type="text" name='product_id' required>
+                    <input type="submit">
+                </form>
+            </div>
+            <div class='order_info'>
+                {{supply_info}}
+            </div>
         </div>
     </div>
 </body>

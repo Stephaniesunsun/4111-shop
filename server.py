@@ -272,6 +272,22 @@ def readcustomer():
 
     return render_template('employee.html', orders=orders)
 
+@app.route('/readsupply',methods=['POST'])
+def readsupply():
+    id=request.form['product_id']
+    supply_info=[]
+    sql=text(
+        'SELECT P.product_id,P.product_name,S.stock_location, C.brand, C.contact_info \
+        FROM supply_company C, stock S,product P\
+        WHERE P.stock_id=S.stock_id and S.company_id=C.company_id and P.product_id=:textid'
+    )
+    cursor = g.conn.execute(sql, textid=id)
+    for result in cursor:
+        row_as_dict=dict(result)
+        supply_info.append(row_as_dict)
+    cursor.close()
+    return render_template('employee.html',supply_info=supply_info)
+
 
 @app.route('/login')
 def login():
