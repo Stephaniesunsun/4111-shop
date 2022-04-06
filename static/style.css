@@ -1,23 +1,33 @@
 * {
   box-sizing: border-box;
-  margin: 0;
+  margin: 1em;
   padding: 0;
 }
-
+h1 {
+  text-align: center;
+}
 .title {
   margin-top: 2em;
   text-align: center;
 }
 
-.login {
+.container {
   margin: 4em 25%;
   display: flex;
   gap: 5em;
 }
 
+.signup-info,
 .login-info {
   margin-top: 1em;
   display: flex;
   flex-direction: column;
   gap: 1em;
+}
+#submit {
+  width: 20%;
+  height: 15%;
+}
+input {
+  width: 30%;
 }

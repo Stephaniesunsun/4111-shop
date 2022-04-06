@@ -1,6 +1,6 @@
 * {
   box-sizing: border-box;
-  margin: 0;
+  margin: 1em;
   padding: 0;
   width: 100%;
 }
@@ -11,11 +11,14 @@
 p {
   margin: 1em;
 }
-input {
+input select {
   width: 30%;
 }
 .add .delete .update .customer-info {
-  width: 50%;
+  width: 30%;
+}
+
+.form {
   display: flex;
   flex-direction: column;
 }

@@ -17,6 +17,7 @@ h3 {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  gap: 10px;
 }
 .option {
   display: flex;
@@ -34,4 +35,9 @@ h3 {
   display: flex;
   flex-direction: column;
   margin-bottom: 1em;
+}
+
+button {
+  width: 100px;
+  height: 50px;
 }

@@ -5,21 +5,16 @@
 
   <body id='customer'>
     <h1 class='title'>4111 SHOP</h1>
-    <div class='login'>
-      <div class="cus-login">
         <h1 class="customer">Customer Login</h1>
-        
-        <div class="login-info">
-          <form action="/customer" method="POST">
+        <div>
+          <form class="login-info" action="/customer" method="POST">
             EMAIL ADDRESS:
             <input type="text" class="email" name='email_cu' required> 
             PASSWORD:
             <input type="text" class="password1" name='password_cu' required>
-            <input class='login' type="submit"/>
+            <input class='submit' type="submit" />
         </form>
         </div>
-      </div>
-    </div>
     {% block javascript %}
     <script src="{{ url_for('static',filename='index.js') }}"></script>
 {% endblock %}

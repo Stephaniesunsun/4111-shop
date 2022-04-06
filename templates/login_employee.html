@@ -10,15 +10,15 @@
 <body id='login_employee'>
     <div class="emp-login">
         <h1 class="employee">Employee Login</h1>
-        <div class="login-info">
-          <form action="/emp-login" method="POST">
+        <div>
+          <form class="login-info" action="/emp-login" method="POST">
             EMPLOYEE ID:
             <input type="text" class="emp_id" name='emp_id' required> 
             NAME:
             <input type="text" class="emp_name" name='emp_name' required>
             AGE:
             <input type="text" class="emp_age" name='emp_age' required>
-            <input class='login' type="submit"/>
+            <input class='submit' type="submit"/>
         </form>
         </div>
         {{error}}
